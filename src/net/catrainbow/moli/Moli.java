@@ -40,7 +40,7 @@ public class Moli extends Plugin {
         if (System.currentTimeMillis() - lastSend < 1000) return;
         MsgContentInfo msgContentInfo = event.getMsgContentInfo();
         String msg = msgContentInfo.getValue();
-        String command = msg.split("\\s+")[1];
+        String command = msg.split("\\s+",2)[1];
         if (!command.startsWith("/")) return;
         String subCommand = command.replaceFirst("/", "");
         this.apply(event, subCommand);
