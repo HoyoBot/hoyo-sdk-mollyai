@@ -1,5 +1,6 @@
 package net.catrainbow.moli;
 
+import cn.hoyobot.sdk.HoyoBot;
 import cn.hoyobot.sdk.event.villa.VillaSendMessageEvent;
 import cn.hoyobot.sdk.network.protocol.mihoyo.MsgContentInfo;
 import cn.hoyobot.sdk.network.protocol.type.TextType;
@@ -59,6 +60,8 @@ public class Moli extends Plugin {
         jsonObject.put("to", this.getBotProxy().getBot().getBotID());
         jsonObject.put("toName", this.botName);
         HttpResponse response = HttpUtil.createPost(api_url).body(jsonObject).addHeaders(headers).executeAsync();
+        //更新大别野ID
+        HoyoBot.instance.getBot().setVillaID(String.valueOf(event.getVilla().getId()));
         if (response.body() != null) {
             if (response.body().length() > 1) {
                 this.getLogger().info("收到 api 响应:\n" + response.body());
