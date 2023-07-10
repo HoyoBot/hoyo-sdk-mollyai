@@ -15,8 +15,8 @@
 
 ## 配置参考
 
-|参数|说明|取值|备注|
-|:---:|:---:|:---:|:---:|
-|apiKey|ApiKey|`string`| |
-|apiSecret|ApiSecret |`string`| |
-|botName|机器人名称|`string`| 聊天中提及此名称会触发回复 |
+|    参数     |    说明     |    取值    |      备注       |
+|:---------:|:---------:|:--------:|:-------------:|
+|  apiKey   |  ApiKey   | `string` |               |
+| apiSecret | ApiSecret | `string` |               |
+|  botName  |   机器人名称   | `string` | 聊天中提及此名称会触发回复 |
