@@ -1,0 +1,4 @@
+name: "MoliAPI"
+main: "net.catrainbow.moli.Moli"
+version: "1.0.0"
+author: "Catrainbow"

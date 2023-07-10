@@ -1,0 +1,8 @@
+#茉莉云的 Api key
+api-key: ""
+#secret
+api-secret: ""
+#机器人名称, 提及此名称后会触发回复, 为空则跳过
+bot-name: ""
+#是否在at机器人后触发回复
+mentioned: true
