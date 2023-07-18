@@ -2,11 +2,12 @@ package net.catrainbow.moli;
 
 import cn.hoyobot.sdk.HoyoBot;
 import cn.hoyobot.sdk.event.villa.VillaSendMessageEvent;
+import cn.hoyobot.sdk.network.protocol.mihoyo.MessageEntity;
 import cn.hoyobot.sdk.network.protocol.mihoyo.MsgContentInfo;
+import cn.hoyobot.sdk.network.protocol.type.MessageEntityType;
 import cn.hoyobot.sdk.network.protocol.type.TextType;
 import cn.hoyobot.sdk.plugin.Plugin;
 import cn.hoyobot.sdk.utils.Config;
-import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
@@ -40,7 +41,7 @@ public class Moli extends Plugin {
         if (System.currentTimeMillis() - lastSend < 1000) return;
         MsgContentInfo msgContentInfo = event.getMsgContentInfo();
         String msg = msgContentInfo.getValue();
-        String command = msg.split("\\s+",2)[1];
+        String command = msg.split("\\s+", 2)[1];
         if (!command.startsWith("/")) return;
         String subCommand = command.replaceFirst("/", "");
         this.apply(event, subCommand);
@@ -55,7 +56,7 @@ public class Moli extends Plugin {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("content", message);
         jsonObject.put("type", 2);
-        jsonObject.put("from", event.getSenderByMember().getUid());
+        jsonObject.put("from", event.getVilla().getId() + "" + event.getSenderByMember().getUid());
         jsonObject.put("fromName", event.getSenderName());
         jsonObject.put("to", this.getBotProxy().getBot().getBotID());
         jsonObject.put("toName", this.botName);
@@ -69,7 +70,23 @@ public class Moli extends Plugin {
                 JSONObject responseJson = new JSONObject(response.body());
                 if (responseJson.getStr("code").equals("00000")) {
                     String result = ((JSONObject) (((JSONArray) responseJson.getByPath("data")).get(0))).getStr("content");
-                    this.getBotProxy().getBot().sendMessage(event.getRoomID(), new MsgContentInfo(result), TextType.MESSAGE);
+
+                    MsgContentInfo msgContentInfo = new MsgContentInfo(result);
+
+                    if (result.contains("播放地址")) {
+                        String[] subResult = result.split("-----------------------------");
+                        String linkLineStr = subResult[2];
+                        String link = linkLineStr.split("：")[1];
+                        int index = subResult[0].length() + 1 + subResult[1].length() + 6;
+                        MessageEntity messageEntity = new MessageEntity();
+                        messageEntity.setType(MessageEntityType.LINK);
+                        messageEntity.setValue("");
+                        messageEntity.setOffset(index);
+                        messageEntity.setLength(link.length());
+                        msgContentInfo.addEntity(messageEntity);
+                    }
+
+                    this.getBotProxy().getBot().sendMessage(event.getRoomID(), msgContentInfo, TextType.MESSAGE);
                 } else
                     this.getBotProxy().getBot().sendMessage(event.getRoomID(), new MsgContentInfo("今天累了呢，明天再聊吧\uD83E\uDD71"), TextType.MESSAGE);
 
